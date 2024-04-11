@@ -1,30 +1,33 @@
 package edu.upc.dsa;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import edu.upc.dsa.models.*;
 
 public class GameManagerImpl implements GameManager {
     private static GameManager instance;
-    protected List<Usuario> usuario;
-    HashMap<String, String> userPurse = new HashMap<>();
+    protected HashMap<String,Usuario> usuario;
+    //HashMap<String, String> userPurse = new HashMap<>();
     HashMap<String, String> Juegos = new HashMap<String, String>();
     LinkedList<String> listaJuegos = new LinkedList<String>();
-    LinkedList<String> listaUsuarios = new LinkedList<String>();
-    LinkedList<String> listaProductos = new LinkedList<String>();
+    LinkedList<Usuario> listaUsuarios = new LinkedList<Usuario>();
+    LinkedList<Producto> listaProductos = new LinkedList<Producto>();
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
     //Perque es private?
     private GameManagerImpl(){
-        this.usuario = new LinkedList<>();
+        this.usuario = new HashMap<>();
     }
     public static GameManager getInstance() {
         if (instance==null) instance = new GameManagerImpl();
         return instance;
+    }
+    public int size() {
+        int ret = this.usuario.size();
+        logger.info("size " + ret);
+
+        return ret;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class GameManagerImpl implements GameManager {
         return estado;
     }
     @Override
-    public void addUsuario(String idUsuario, String nombre, String apellido) {
+    public void addUsuario(String idUsuario, String nombre, String apellido, double DSA_coins) {
         Usuario user;
         //Regalo de 25 dsa coins
         int dsaCoins = 25;
@@ -56,10 +59,10 @@ public class GameManagerImpl implements GameManager {
         }
         else{
             logger.info("Añadimos usuario con id: "+idUsuario+", ya que no existe");
-            user = new Usuario(idUsuario, nombre, apellido);
-            userPurse.put(idUsuario,userCoins);
+            user = new Usuario(idUsuario, nombre, apellido, DSA_coins);
+            //userPurse.put(idUsuario,userCoins);
             //Afegim el usuari a la llista, com a ultim element
-            listaUsuarios.addLast(idUsuario);
+            listaUsuarios.addLast(user);
         }
     }
 
@@ -74,7 +77,7 @@ public class GameManagerImpl implements GameManager {
             logger.info("Añadimos producto con id: " + idProducto + ", ya que no existe");
             producto = new Producto(idProducto, descripcion, precio);
             //Afegim el producte a la llista, com a ultim element
-            listaUsuarios.addLast(idProducto);
+            listaProductos.addLast(producto);
         }
     }
 

@@ -4,10 +4,12 @@ public class Usuario {
     String id;
     String nombre;
     String apellido;
-    public Usuario(String id, String nombre, String apellido){
+    double DSA_coins;
+    public Usuario(String id, String nombre, String apellido, double DSA_coins){
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.DSA_coins = DSA_coins;
     }
     public Usuario(){};
 
@@ -33,5 +35,13 @@ public class Usuario {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+
+    public double getDSA_coins() {
+        return DSA_coins;
+    }
+
+    public void setDSA_coins(double DSA_coins) {
+        this.DSA_coins = DSA_coins;
     }
 }

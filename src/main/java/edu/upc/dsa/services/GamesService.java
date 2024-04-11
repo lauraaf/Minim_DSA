@@ -2,10 +2,15 @@ package edu.upc.dsa.services;
 
 
 import edu.upc.dsa.GameManager;
+import edu.upc.dsa.GameManagerImpl;
+import edu.upc.dsa.models.Juego;
+import edu.upc.dsa.models.Partida;
+import edu.upc.dsa.models.Usuario;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.log4j.Logger;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
@@ -13,24 +18,43 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Api(value = "/Juego", description = "Endpoint to Track Service")
-@Path("/Juego")
+@Api(value = "/Game", description = "Endpoint to Game Service")
+@Path("/Game")
 public class GamesService {
 
     private GameManager gm;
+    final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
     public GamesService() {
         this.gm = GameManagerImpl.getInstance();
         if (gm.size()==0) {
-            this.tm.addTrack("La Barbacoa", "Georgie Dann");
-            this.tm.addTrack("Despacito", "Luis Fonsi");
-            this.tm.addTrack("Enter Sandman", "Metallica");
+            this.gm.addUsuario("1", "Laura","Fernandez",25);
+            this.gm.addUsuario("2", "Lidia","Esquius",25);
+            this.gm.addUsuario("3", "Lidon","Garcia",25);
+
+            this.gm.addProducto("1","Pócima",15);
+            this.gm.addProducto("2","Espada",75);
         }
+    }
+    @POST
+    @ApiOperation(value = "Add new user", notes = "Add new user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response=Usuario.class),
+            @ApiResponse(code = 500, message = "Validation Error")
 
+    })
 
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addUsuario(Usuario usuario){
+
+        if (usuario.getId()==null || usuario.getNombre()==null || usuario.getApellido()==null)  return Response.status(500).entity(usuario).build();
+        this.gm.addUsuario(usuario.getId(), usuario.getNombre(), usuario.getApellido(), usuario.getDSA_coins());
+        return Response.status(201).entity(usuario).build();
     }
 
-    @GET
+
+    /*@GET
     @ApiOperation(value = "get all Track", notes = "asdasd")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Track.class, responseContainer="List"),
@@ -107,6 +131,6 @@ public class GamesService {
         if (track.getSinger()==null || track.getTitle()==null)  return Response.status(500).entity(track).build();
         this.tm.addTrack(track);
         return Response.status(201).entity(track).build();
-    }
+    }*/
 
 }
